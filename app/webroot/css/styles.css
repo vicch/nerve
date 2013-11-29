@@ -1,0 +1,36 @@
+html, body {
+	height: 100%;
+}
+
+body {
+	border: 0 none;
+	margin: 0;
+	padding: 0;
+}
+
+#container, #content {
+	min-width: 1400px;
+	height: 100%;
+}
+
+#content-inner {
+	height: 100%;
+	padding: 0 380px 0 280px;
+}
+
+.sidebar {
+	background-color: #DDDDDD;
+	box-shadow: 0 3px 7px 1px rgba(0, 0, 0, 0.55);
+	height: 100%;
+	padding: 15px;
+}
+
+#leftbar {
+	float: left;
+	width: 250px;
+}
+
+#rightbar {
+	float: right;
+	width: 350px;
+}
