@@ -4,7 +4,7 @@
 }
 
 html, body {
-	font-family: 'Roboto Slab', Helvetica, sans-serif;
+	font-family: 'Asap', Helvetica, sans-serif;
 	height: 100%;
 }
 
@@ -19,7 +19,7 @@ body {
 }
 
 #content {
-	background: url('../img/dot_bg.jpg') top left repeat;
+	background: url('../img/cross_bg.jpg') top left repeat;
 }
 
 #content-inner {

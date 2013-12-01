@@ -15,13 +15,15 @@
         echo $this->Html->script(array(
             'jquery.min.js',
             'arbor.js',
+            'arbor-tween.js',
+            'arbor-graphics.js',
         ));
         
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
 	?>
-	<link href='http://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Asap' rel='stylesheet' type='text/css'>
 </head>
 <body>
 	<div id="container">
@@ -38,6 +40,6 @@
 		</div>
 		<!-- <div id="footer"></div> -->
 	</div>
-	<?php // echo $this->element('sql_dump'); ?>
+	<?php echo $this->element('sql_dump'); ?>
 </body>
 </html>

@@ -7,6 +7,13 @@ class TopController extends AppController {
     public $uses = array('Word');
     
     public function index() {
-        $data = $this->Word->find('all');
+        
+        if (isset($this->request->query['word'])) {
+            $word = $this->request->query['word'];
+            $query = $this->Word->queryForView($word);
+            $queryResult = $this->Word->find('all', $query);
+            $formatResult = $this->Word->formatForView($queryResult);
+            $this->set('data', $formatResult);
+        }
     }
 }
