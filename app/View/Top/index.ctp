@@ -168,17 +168,15 @@
                     gfx.line(p1, p2, {stroke:edge.target.data.color, width:4, alpha:edge.target.data.alpha})
                 })
                 sys.eachNode(function(node, pt){
-                    var w = Math.max(40, 60+gfx.textWidth(node.name))
-                    if (node.data.alpha===0) return
-                    if (node.data.shape=='dot'){
-                        gfx.oval(pt.x-w/2, pt.y-w/2, w, w, {fill:node.data.color, alpha:node.data.alpha})
-                        gfx.text(node.name, pt.x, pt.y+7, {color:"white", align:"center", font:"Asap", size:17})
-                        gfx.text(node.name, pt.x, pt.y+7, {color:"white", align:"center", font:"Asap", size:17})
-                    }else{
-                        gfx.rect(pt.x-w/2, pt.y-8, w, 20, 4, {fill:node.data.color, alpha:node.data.alpha})
-                        gfx.text(node.name, pt.x, pt.y+9, {color:"white", align:"center", font:"Asap", size:17})
-                        gfx.text(node.name, pt.x, pt.y+9, {color:"white", align:"center", font:"Asap", size:17})
+                    if (node.data.color=='red') {
+                        var w = Math.max(60, 80+gfx.textWidth(node.name))
+                    } else {
+                        var w = Math.max(40, 60+gfx.textWidth(node.name))
                     }
+                    if (node.data.alpha===0) return
+                    gfx.oval(pt.x-w/2, pt.y-w/2, w, w, {fill:node.data.color, alpha:node.data.alpha})
+                    gfx.text(node.name, pt.x, pt.y+7, {color:"white", align:"center", font:"Asap", size:17})
+                    gfx.text(node.name, pt.x, pt.y+7, {color:"white", align:"center", font:"Asap", size:17})
                 })
                 // that._drawVignette()
             },
@@ -266,7 +264,7 @@
 
                         // if (nearest.node.data.shape!='dot'){
                             selected = (nearest.distance < 50) ? nearest : null
-                            if (selected){
+                            if (selected && selected.node.data.link){
                                 e.target.style.cursor = 'pointer'
                                 dom.addClass('linkable')
                                 // window.status = selected.node.data.link.replace(/^\//,"http://"+window.location.host+"/").replace(/^#/,'')

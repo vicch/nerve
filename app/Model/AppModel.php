@@ -30,4 +30,6 @@ App::uses('Model', 'Model');
  * @package       app.Model
  */
 class AppModel extends Model {
+    const ENTRY_DELETED = 1;
+    const ENTRY_NOT_DELETED = 0;
 }

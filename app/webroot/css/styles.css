@@ -4,6 +4,7 @@
 }
 
 html, body {
+	color: #333333;
 	font-family: 'Asap', Helvetica, sans-serif;
 	height: 100%;
 }
@@ -12,14 +13,16 @@ body {
 	border: 0 none;
 }
 
+/* 3 column layout */
+
 #container,
 #content {
-	min-width: 1400px;
+	/*min-width: 1400px;*/
 	height: 100%;
 }
 
 #content {
-	background: url('../img/cross_bg.jpg') top left repeat;
+	background: url('../img/pattern_bg.png') top left repeat;
 }
 
 #content-inner {
@@ -28,21 +31,108 @@ body {
 }
 
 .sidebar {
-	background-color: #EEEEEE;
-	box-shadow: 0 3px 7px 1px rgba(0, 0, 0, 0.55);
+	background-color: #FAFAFA;
+	box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.55) inset;
 	height: 800px;
-	padding: 15px;
+	padding: 25px;
 	position: absolute;
 }
 
 #leftbar {
 	left: 100px;
 	top: 50px;
-	width: 250px;
+	width: 230px;
 }
 
 #rightbar {
 	right: 100px;
 	top: 50px;
+	width: 330px;
+}
+
+/* left sidebar */
+
+/* right sidebar */
+
+#frombox,
+#tobox {
+	height: 290px;
+}
+
+#relationbox {
+	height: 200px;
+}
+
+#rightbar hr {
+	height: 2px;
+	border: 0;
+	background-color: #DDDDDD;
+	margin: 0 0 10px -10px;
 	width: 350px;
 }
+
+#rightbar hr::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background-color: #B3B3B3;
+}
+
+.rightrowbox {
+	margin-bottom: 10px;
+}
+
+/* right sidebar form */
+
+.word-field {
+	display: inline-block;
+}
+
+.word-field input,
+.word-field select {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #BBBBBB;
+    border-radius: 3px 3px 3px 3px;    
+    box-shadow: 0 0 1px #AAAAAA inset;
+	font-family: 'Asap', Helvetica, sans-serif;
+    font-size: 14px;
+    height: 20px;
+    padding: 3px 2px;
+    text-indent: 4px;
+}
+
+.word-field input.word {
+	width: 240px;
+}
+
+.word-field select {
+	height: 28px;
+	padding-top: 3px;
+	position: relative;
+	text-indent: 1px;
+	top: -1px;
+}
+
+.word-field select option {
+	padding-left: 4px;
+}
+
+.word-field select.lang {
+    width: 50px;
+}
+
+.word-field select.reType {
+    width: 300px;
+}
+
+div.submit {
+	display: inline-block;
+}
+
+div.submit input {
+    height: 29px;
+    margin-left: -1px;
+    width: 27px;
+}
+
+
