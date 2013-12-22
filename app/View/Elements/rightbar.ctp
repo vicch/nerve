@@ -52,6 +52,15 @@
                 'class' => 'submit',
                 'name'  => 'addRe',
             )); ?>
+            <div class='detail-field'>
+                <?= $this->Form->input('reDetailId', array(
+                    'type'  => 'hidden',
+                )) ?>
+                <?= $this->Form->input('reDetailText', array(
+                    'type'     => 'textarea',
+                    'class'    => 'reDetail',
+                )) ?>
+            </div>
         </div>
     </div>
     <hr />

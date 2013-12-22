@@ -2,11 +2,14 @@
 
 class Word extends AppModel {
     
+    const INIT_MIN_RE = 3;
+    
     private $__selectLangs = array(
         '',
         'en' => 'En',
         'fr' => 'Fr',
         'jp' => 'Jp',
+        'ch' => 'Ch',
     );
     
     public function getSelectLangs() {
@@ -101,7 +104,25 @@ class Word extends AppModel {
         if (!empty($word)) {
             $wordCondition = array('Word.word' => $word);
         } else {
-            $wordCondition = array('Word.id = (SELECT word_id_from FROM relations ORDER BY created DESC LIMIT 1)');
+            // If no queried word,
+            // display word with no less than INIT_MIN_RE relations,
+            // sorting by relation created time from latest to earliest
+            $minRe = self::INIT_MIN_RE;
+            $wordCondition = array("Word.id = (
+                SELECT
+                r.word_id_from
+                FROM relations r
+                LEFT JOIN (
+                    SELECT
+                    id,
+                    COUNT(id) AS count
+                    FROM relations
+                    GROUP BY word_id_from
+                ) rc ON r.id = rc.id
+                WHERE rc.count >= $minRe
+                ORDER BY created DESC
+                LIMIT 1
+            )");
         }
         $conditions = array_merge($conditions, $wordCondition);
         return array(

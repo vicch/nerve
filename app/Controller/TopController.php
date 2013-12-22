@@ -4,7 +4,7 @@ class TopController extends AppController {
     
     public $name = 'Top';
     
-    public $uses = array('Word', 'Relation');
+    public $uses = array('Word', 'Relation', 'RelationDetail');
     public $components = array('Session');
     
     const RIGHT_FORM_NAME = 'rForm';
@@ -25,9 +25,6 @@ class TopController extends AppController {
         
         $init = (isset($this->request->query['init'])) ? $this->request->query['init'] : 1;
         $formData = $this->__initFormData($queryData, $init);
-        
-        // echo '<pre>' . var_export($formData) . '</pre>';
-        // exit;
         
         $this->set('data', $queryData);
         $this->data = $formData;
@@ -56,19 +53,20 @@ class TopController extends AppController {
      */
     public function addAll() {
         $postData = $this->request->data;
+        $postFData = $postData[self::RIGHT_FORM_NAME];
         
         $postType = $this->__getPostType($postData);
         
         if ($postType == self::POST_ADD_WORD_FROM) {
-            $this->__addWord($postData, 'From');
+            $this->__addWord($postFData, 'From');
         } elseif ($postType == self::POST_ADD_WORD_TO) {
-            $this->__addWord($postData, 'To');
+            $this->__addWord($postFData, 'To');
         } elseif ($postType == self::POST_ADD_RELATION) {
-            $this->__addRelation($postData);
+            $this->__addRelation($postFData);
         }
         
         if (!empty($postData[self::RIGHT_FORM_NAME]['wFromWord'])) {
-            $this->redirect('index?init=0&word=' . $postData['rForm']['wFromWord']);
+            $this->redirect('index?init=0&word=' . $postData[self::RIGHT_FORM_NAME]['wFromWord']);
         } else {
             $this->redirect('index');
         }
@@ -107,13 +105,13 @@ class TopController extends AppController {
         }
     }
     
-    private function __addWord($postData, $type) {
+    private function __addWord($postFData, $type) {
         
         // Prepare data
         $wordData = array(
-            'id'       => $postData[self::RIGHT_FORM_NAME]['w' . $type . 'Id'],
-            'word'     => $postData[self::RIGHT_FORM_NAME]['w' . $type . 'Word'],
-            'language' => $postData[self::RIGHT_FORM_NAME]['w' . $type . 'Language'],
+            'id'       => $postFData['w' . $type . 'Id'],
+            'word'     => $postFData['w' . $type . 'Word'],
+            'language' => $postFData['w' . $type . 'Language'],
         );
         
         // Add word
@@ -126,28 +124,39 @@ class TopController extends AppController {
         $this->Session->write('formData', $formData);
     }
     
-    private function __addRelation($postData) {
+    private function __addRelation($postFData) {
         
-        // Prepare data
+        // Prepare relation detail data
+        $reDeData = array(
+            'id'   => isset($postFData['reDetailId']) ? $postFData['reDetailId'] : null,
+            'text' => isset($postFData['reDetailText']) ? $postFData['reDetailText'] : null,
+        );
+        
+        // Add relation detail
+        $addedReDe = $this->RelationDetail->addRelationDetail($reDeData);
+        
+        // Prepare relation data
         $reData = array(
-            'id'               => $postData[self::RIGHT_FORM_NAME]['reId'],
-            'word_id_from'     => $postData[self::RIGHT_FORM_NAME]['wFromId'],
+            'id'               => $postFData['reId'],
+            'word_id_from'     => $postFData['wFromId'],
             'sense_id_from'    => null,
-            'word_id_to'       => $postData[self::RIGHT_FORM_NAME]['wToId'],
+            'word_id_to'       => $postFData['wToId'],
             'sense_id_to'      => null,
-            'relation_type_id' => $postData[self::RIGHT_FORM_NAME]['reType'],
-            'relation_detail_id' => null,
+            'relation_type_id' => $postFData['reType'],
+            'relation_detail_id' => isset($addedReDe['id']) ? $addedReDe['id'] : null,
         );
         
         // Add relation
         $addedRe = $this->Relation->addRelation($reData);
         
         // Set POST data for form display
-        $formData[self::RIGHT_FORM_NAME]['wToId'] = $postData[self::RIGHT_FORM_NAME]['wToId'];
-        $formData[self::RIGHT_FORM_NAME]['wToWord'] = $postData[self::RIGHT_FORM_NAME]['wToWord'];
-        $formData[self::RIGHT_FORM_NAME]['wToLanguage'] = $postData[self::RIGHT_FORM_NAME]['wToLanguage'];
+        $formData[self::RIGHT_FORM_NAME]['wToId'] = $postFData['wToId'];
+        $formData[self::RIGHT_FORM_NAME]['wToWord'] = $postFData['wToWord'];
+        $formData[self::RIGHT_FORM_NAME]['wToLanguage'] = $postFData['wToLanguage'];
         $formData[self::RIGHT_FORM_NAME]['reId'] = $addedRe['id'];
         $formData[self::RIGHT_FORM_NAME]['reType'] = $addedRe['relation_type_id'];
+        $formData[self::RIGHT_FORM_NAME]['reDetailId'] = isset($addedReDe['id']) ? $addedReDe['id'] : null;
+        $formData[self::RIGHT_FORM_NAME]['reDetailText'] = isset($addedReDe['text']) ? $addedReDe['text'] : null;
         $this->Session->write('formData', $formData);
     }
 }

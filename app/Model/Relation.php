@@ -57,14 +57,15 @@ class Relation extends AppModel {
         );
         $checkConditions = array_merge($checkConditions, $reData);
         
-        $reExist = $this->find('count', array('conditions' => $checkConditions));
+        $reExist = $this->find('first', array('conditions' => $checkConditions));
         
-        if ($reExist == 0) {
+        if (empty($reExist)) {
+        // Relation not exist yet, create relation and reverse relation
             
             // Original relation
             $relation = new Relation;
             $reData['relation_type_id'] = $postRe['relation_type_id'];
-            // $reData['relation_detail_id'] = ;
+            $reData['relation_detail_id'] = $postRe['relation_detail_id'];
             $relation->set($reData);
             $relation->save();
             $reData['id'] = $relation->getLastInsertId();
@@ -78,10 +79,47 @@ class Relation extends AppModel {
                 'word_id_to'       => $reData['word_id_from'],
                 'sende_id_to'      => $reData['sense_id_from'],
                 'relation_type_id' => $this->__relatedReType[$reData['relation_type_id']],
-                // 'relation_detail_id',
+                'relation_detail_id' => $reData['relation_detail_id'],
             );
             $reverseRe->set($reverseReData);
             $reverseRe->save();
+            
+        } elseif (!isset($reExist['Relation']['relation_detail_id']) && isset($postRe['relation_detail_id'])) {
+        // Relation exists, but relation detail not set,
+        // set detail Id for relation and reverse relation
+        
+            $relation = new Relation;
+            $reData['id'] = $reExist['Relation']['id'];
+            $reData['relation_type_id'] = $reExist['Relation']['relation_type_id'];
+            $reData['relation_detail_id'] = $postRe['relation_detail_id'];
+            $relation->set($reData);
+            $relation->save();
+            
+            if (isset($reExist['Relation']['parent_id'])) {
+                $checkReverseConditions = array(
+                    'id' => $reExist['Relation']['parent_id'],
+                    'deleted'   => AppModel::ENTRY_NOT_DELETED,
+                );
+            } else {
+                $checkReverseConditions = array(
+                    'parent_id' => $reExist['Relation']['id'],
+                    'deleted'   => AppModel::ENTRY_NOT_DELETED,
+                );
+            }
+            
+            $reverseReCheck = $this->find('first', array('conditions' => $checkReverseConditions));
+            
+            $reverseRe = new Relation;
+            $reverseReData['id'] = $reverseReCheck['Relation']['id'];
+            $reverseReData['relation_detail_id'] = $postRe['relation_detail_id'];
+            $reverseRe->set($reverseReData);
+            $reverseRe->save();
+            
+        } else {
+        // Relation exists, relation detail set,
+        // only return relation Id
+        
+            $reData['id'] = $reExist['Relation']['id'];
         }
     
         return $reData;

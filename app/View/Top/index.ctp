@@ -243,7 +243,6 @@
                 })
             },
             
-            
             _initMouseHandling:function(){
                 // no-nonsense drag and drop (thanks springy.js)
                 selected = null;
@@ -290,6 +289,14 @@
                         var pos = $(canvas).offset();
                         _mouseP = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
                         nearest = dragged = sys.nearest(_mouseP);
+                        
+                        $('#rFormReId').val(selected.node.data.data['relation']['id'])
+                        $('#rFormReType').val(selected.node.data.data['type']['id'])
+                        $('#rFormReDetailId').val(selected.node.data.data['detail']['id'])
+                        $('#rFormReDetailText').val(selected.node.data.data['detail']['text'])
+                        $('#rFormWToId').val(selected.node.data.data['word_to']['id'])
+                        $('#rFormWToWord').val(selected.node.data.data['word_to']['word'])
+                        $('#rFormWToLanguage').val(selected.node.data.data['word_to']['language'])
                         
                         if (dragged && dragged.node !== null) dragged.node.fixed = true
 
@@ -558,30 +565,31 @@
             mod_subj:"#128425",        // color 3 green
             diff:"#2572EB",            // color 1 blue
             association:"#008E8E",     // color 4 cyan
-            translation:"#DE4AAD",     // color 5 pink
+            translation:"#008E8E",     // color 4 cyan
             sense_contain:"#7200AC",   // color 6 purple
             sense_belong:"#7200AC",    // color 6 purple
-            literal_contain:"#128425", // color 3 green
-            literal_belong:"#128425",  // color 3 green
+            literal_contain:"#DE4AAD", // color 5 pink
+            literal_belong:"#DE4AAD",  // color 5 pink
             explain_by:"#008E8E",      // color 4 cyan
             explain:"#008E8E",         // color 4 cyan
         }
         var theUI = {
             nodes:{
-                "<?php echo $data['word']['word'] ?>":{color:"red", shape:"dot", alpha:1},
+                "<?= $data['word']['word'] ?>":{color:"red", shape:"dot", alpha:1},
                 <?php foreach($data['relations'] as $relation): ?>
-                "<?php echo $relation['word_to']['word'] ?>":{
-                    color:CLR.<?php echo $relation['type']['type'] ?>,
+                "<?= $relation['word_to']['word'] ?>":{
+                    color:CLR.<?= $relation['type']['type'] ?>,
                     link:'/nerve/?word=<?php echo $relation['word_to']['word'] ?>',
+                    data:<?= json_encode($relation) ?>,
                     shape:"dot",
                     alpha:1
                 },
                 <?php endforeach; ?>
             },
             edges:{
-                "<?php echo $data['word']['word'] ?>":{
+                "<?= $data['word']['word'] ?>":{
                     <?php foreach($data['relations'] as $relation): ?>
-                    "<?php echo $relation['word_to']['word'] ?>":{length:.8},
+                    "<?= $relation['word_to']['word'] ?>":{length:.8},
                     <?php endforeach; ?>
                 },
             }

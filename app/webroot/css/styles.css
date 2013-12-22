@@ -89,7 +89,8 @@ body {
 }
 
 .word-field input,
-.word-field select {
+.word-field select,
+.detail-field textarea {
     background: none repeat scroll 0 0 #FFFFFF;
     border: 1px solid #BBBBBB;
     border-radius: 3px 3px 3px 3px;    
@@ -135,4 +136,9 @@ div.submit input {
     width: 27px;
 }
 
-
+.detail-field textarea {
+	height: 140px;
+	margin-top: 5px;
+	resize: none;
+	width: 294px;
+}
