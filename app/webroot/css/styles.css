@@ -84,13 +84,15 @@ body {
 
 /* right sidebar form */
 
-.word-field {
+.word-field,
+.sense-field {
 	display: inline-block;
 }
 
 .word-field input,
 .word-field select,
-.detail-field textarea {
+.detail-field textarea,
+.sense-field input {
     background: none repeat scroll 0 0 #FFFFFF;
     border: 1px solid #BBBBBB;
     border-radius: 3px 3px 3px 3px;    
@@ -98,6 +100,7 @@ body {
 	font-family: 'Asap', Helvetica, sans-serif;
     font-size: 14px;
     height: 20px;
+    margin-bottom: 5px;
     padding: 3px 2px;
     text-indent: 4px;
 }
@@ -130,15 +133,38 @@ div.submit {
 	display: inline-block;
 }
 
-div.submit input {
+div.submit input,
+div.submit button {
     height: 29px;
     margin-left: -1px;
     width: 27px;
 }
 
+.sense-field {
+	margin-left: -17px;
+}
+
+.sense-field.new {
+	margin-left: 0;
+}
+
+.sense-field input[type=radio] {
+	margin-bottom: 0;
+	vertical-align: middle;
+}
+
+.sense-field .pos {
+	width: 44px;
+}
+
+.sense-field .meaning {
+	width: 240px;
+}
+
 .detail-field textarea {
 	height: 140px;
-	margin-top: 5px;
+	padding-left: 6px;
 	resize: none;
-	width: 294px;
+	text-indent: 0;
+	width: 290px;
 }

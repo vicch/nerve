@@ -5,20 +5,24 @@ class Relation extends AppModel {
     private $__selectReTypes = array(
         '',
         1 => 'Synonym',
-        2 => 'Antonym',
+        14 => 'Explained by ->',
+        15 => 'Explain ->',
+        8 => 'Association',
+        9 => 'Translation',
+        16 => 'Cognate',
+        19 => 'Collocation',
+        17 => 'Subject -> Verb',
+        18 => 'Verb <- Subject',
         3 => 'Verb -> Object',
         4 => 'Object <- Verb',
         5 => 'Subject <- Modifier',
         6 => 'Modifier -> Subject',
-        7 => 'Differentiation',
-        8 => 'Association',
-        9 => 'Translation',
         10 => 'Sematically contain ->',
         11 => 'Sematically belong to ->',
         12 => 'Literally contain ->',
         13 => 'Literally belong to ->',
-        14 => 'Explained by ->',
-        15 => 'Explain ->',
+        7 => 'Differentiation',
+        2 => 'Antonym',
     );
     
     private $__relatedReType = array(
@@ -37,6 +41,10 @@ class Relation extends AppModel {
         13 => 12,
         14 => 15,
         15 => 14,
+        16 => 16,
+        17 => 18,
+        18 => 17,
+        19 => 19,
     );
     
     public function getSelectReTypes() {

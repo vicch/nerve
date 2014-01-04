@@ -17,6 +17,7 @@
             'arbor.js',
             'arbor-tween.js',
             'arbor-graphics.js',
+            'main.js',
         ));
         
 		echo $this->fetch('meta');

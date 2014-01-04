@@ -4,12 +4,13 @@ class TopController extends AppController {
     
     public $name = 'Top';
     
-    public $uses = array('Word', 'Relation', 'RelationDetail');
+    public $uses = array('Word', 'WordSense', 'Relation', 'RelationDetail');
     public $components = array('Session');
     
     const RIGHT_FORM_NAME = 'rForm';
     
     const POST_ADD_WORD_FROM = 'addWFrom';
+    const POST_ADD_SENSE_FROM= 'addSFrom';
     const POST_ADD_WORD_TO   = 'addWTo';
     const POST_ADD_RELATION  = 'addRe';
     
@@ -23,6 +24,7 @@ class TopController extends AppController {
         $queryResult = $this->Word->find('all', $query);
         $queryData = $this->Word->formatForView($queryResult);
         
+        // $init == 0 means redirected from addX() action
         $init = (isset($this->request->query['init'])) ? $this->request->query['init'] : 1;
         $formData = $this->__initFormData($queryData, $init);
         
@@ -59,10 +61,12 @@ class TopController extends AppController {
         
         if ($postType == self::POST_ADD_WORD_FROM) {
             $this->__addWord($postFData, 'From');
-        } elseif ($postType == self::POST_ADD_WORD_TO) {
-            $this->__addWord($postFData, 'To');
+        } elseif ($postType == self::POST_ADD_SENSE_FROM) {
+            $this->__addSense($postFData, 'From');
         } elseif ($postType == self::POST_ADD_RELATION) {
             $this->__addRelation($postFData);
+        } elseif ($postType == self::POST_ADD_WORD_TO) {
+            $this->__addWord($postFData, 'To');
         }
         
         if (!empty($postData[self::RIGHT_FORM_NAME]['wFromWord'])) {
@@ -90,6 +94,15 @@ class TopController extends AppController {
                 'wFromLanguage' => $queryData['word']['language'],
             );
             $formData = array_merge($formData, $wFromData);
+            foreach ($queryData['senses'] as $key => $sense) {
+                $senseData = array(
+                    'sFromId_' . $key    => $sense['id'],
+                    'sFromPos_' . $key   => $sense['pos'],
+                    'sFromOrder_' . $key => $sense['order_num'],
+                    'sFromMng_' . $key   => $sense['meaning'],
+                );
+                $formData = array_merge($formData, $senseData);
+            }
         }
         
         return array(self::RIGHT_FORM_NAME => $formData);
@@ -98,10 +111,12 @@ class TopController extends AppController {
     private function __getPostType($postData) {
         if (isset($postData[self::POST_ADD_WORD_FROM])) {
             return self::POST_ADD_WORD_FROM;
-        } elseif (isset($postData[self::POST_ADD_WORD_TO])) {
-            return self::POST_ADD_WORD_TO;
+        } elseif (isset($postData[self::POST_ADD_SENSE_FROM])) {
+            return self::POST_ADD_SENSE_FROM;
         } elseif (isset($postData[self::POST_ADD_RELATION])) {
             return self::POST_ADD_RELATION;
+        } elseif (isset($postData[self::POST_ADD_WORD_TO])) {
+            return self::POST_ADD_WORD_TO;
         }
     }
     
@@ -121,6 +136,26 @@ class TopController extends AppController {
         $formData[self::RIGHT_FORM_NAME]['w' . $type . 'Id'] = $addedWord['id'];
         $formData[self::RIGHT_FORM_NAME]['w' . $type . 'Word'] = $addedWord['word'];
         $formData[self::RIGHT_FORM_NAME]['w' . $type . 'Language'] = $addedWord['language'];
+        $this->Session->write('formData', $formData);
+    }
+    
+    private function __addSense($postFData, $type) {
+        
+        // Prepare data
+        $senseData = array(
+            'word_id' => $postFData['w' . $type . 'Id'],
+            'pos'     => $postFData['s' . $type . 'PosNew'],
+            'meaning' => $postFData['s' . $type . 'MngNew'],
+        );
+        
+        // Add sense
+        $addedSense = $this->WordSense->addSense($senseData);
+        
+        // Set POST data for form display
+        $formData[self::RIGHT_FORM_NAME]['s' . $type . 'Id_' . $addedSense['id']]      = $addedSense['id'];
+        $formData[self::RIGHT_FORM_NAME]['s' . $type . 'Pos_' . $addedSense['id']]     = $addedSense['pos'];
+        $formData[self::RIGHT_FORM_NAME]['s' . $type . 'Order_' . $addedSense['id']]   = $addedSense['order_num'];
+        $formData[self::RIGHT_FORM_NAME]['s' . $type . 'Mng_' . $addedSense['id']] = $addedSense['meaning'];
         $this->Session->write('formData', $formData);
     }
     

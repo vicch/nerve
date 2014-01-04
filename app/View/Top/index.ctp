@@ -3,128 +3,6 @@
 <script>
 (function($){
 
-    // var Renderer = function(canvas){
-    //     var canvas = $(canvas).get(0)
-    //     var ctx = canvas.getContext("2d");
-    //     var particleSystem
-
-    //     var that = {
-    //         init:function(system){
-    //             //
-    //             // the particle system will call the init function once, right before the
-    //             // first frame is to be drawn. it's a good place to set up the canvas and
-    //             // to pass the canvas size to the particle system
-    //             //
-    //             // save a reference to the particle system for use in the .redraw() loop
-    //             particleSystem = system
-
-    //             // inform the system of the screen dimensions so it can map coords for us.
-    //             // if the canvas is ever resized, screenSize should be called again with
-    //             // the new dimensions
-    //             particleSystem.screenSize(canvas.width, canvas.height) 
-    //             particleSystem.screenPadding(80) // leave an extra 80px of whitespace per side
-                
-    //             // set up some event handlers to allow for node-dragging
-    //             that.initMouseHandling()
-    //         },
-            
-    //         redraw:function(){
-    //             // 
-    //             // redraw will be called repeatedly during the run whenever the node positions
-    //             // change. the new positions for the nodes can be accessed by looking at the
-    //             // .p attribute of a given node. however the p.x & p.y values are in the coordinates
-    //             // of the particle system rather than the screen. you can either map them to
-    //             // the screen yourself, or use the convenience iterators .eachNode (and .eachEdge)
-    //             // which allow you to step through the actual node objects but also pass an
-    //             // x,y point in the screen's coordinate system
-    //             // 
-    //             // ctx.fillStyle = "white"
-    //             var background = new Image();
-    //             background.src = "img/dot_bg.jpg";
-    //             var pattern = ctx.createPattern(background, "repeat");
-    //             ctx.fillStyle = pattern;
-    //             ctx.fillRect(0,0, canvas.width, canvas.height)
-                
-    //             particleSystem.eachEdge(function(edge, pt1, pt2){
-    //                 // edge: {source:Node, target:Node, length:#, data:{}}
-    //                 // pt1:    {x:#, y:#}    source position in screen coords
-    //                 // pt2:    {x:#, y:#}    target position in screen coords
-
-    //                 // draw a line from pt1 to pt2
-    //                 ctx.strokeStyle = "rgba(0,0,0, .333)"
-    //                 ctx.lineWidth = 1
-    //                 ctx.beginPath()
-    //                 ctx.moveTo(pt1.x, pt1.y)
-    //                 ctx.lineTo(pt2.x, pt2.y)
-    //                 ctx.stroke()
-    //             })
-
-    //             particleSystem.eachNode(function(node, pt){
-    //                 // node: {mass:#, p:{x,y}, name:"", data:{}}
-    //                 // pt:     {x:#, y:#}    node position in screen coords
-
-    //                 // draw a rectangle centered at pt
-    //                 var w = 10
-    //                 ctx.fillStyle = (node.data.alone) ? "orange" : "black"
-    //                 ctx.fillRect(pt.x-w/2, pt.y-w/2, w,w)
-    //             })                    
-    //         },
-            
-    //         initMouseHandling:function(){
-    //             // no-nonsense drag and drop (thanks springy.js)
-    //             var dragged = null;
-
-    //             // set up a handler object that will initially listen for mousedowns then
-    //             // for moves and mouseups while dragging
-    //             var handler = {
-    //                 clicked:function(e){
-    //                     var pos = $(canvas).offset();
-    //                     _mouseP = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
-    //                     dragged = particleSystem.nearest(_mouseP);
-
-    //                     if (dragged && dragged.node !== null){
-    //                         // while we're dragging, don't let physics move the node
-    //                         dragged.node.fixed = true
-    //                     }
-
-    //                     $(canvas).bind('mousemove', handler.dragged)
-    //                     $(window).bind('mouseup', handler.dropped)
-
-    //                     return false
-    //                 },
-    //                 dragged:function(e){
-    //                     var pos = $(canvas).offset();
-    //                     var s = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
-
-    //                     if (dragged && dragged.node !== null){
-    //                         var p = particleSystem.fromScreen(s)
-    //                         dragged.node.p = p
-    //                     }
-
-    //                     return false
-    //                 },
-
-    //                 dropped:function(e){
-    //                     if (dragged===null || dragged.node===undefined) return
-    //                     if (dragged.node !== null) dragged.node.fixed = false
-    //                     dragged.node.tempMass = 1000
-    //                     dragged = null
-    //                     $(canvas).unbind('mousemove', handler.dragged)
-    //                     $(window).unbind('mouseup', handler.dropped)
-    //                     _mouseP = null
-    //                     return false
-    //                 }
-    //             }
-                
-    //             // start listening
-    //             $(canvas).mousedown(handler.clicked);
-
-    //         },
-            
-    //     }
-    //     return that
-    // }
-
     var Renderer = function(elt){
         var dom = $(elt)
         var canvas = dom.get(0)
@@ -136,7 +14,6 @@
         var selected = null,
                 nearest = null,
                 _mouseP = null;
-
         
         var that = {
             init:function(pSystem){
@@ -170,13 +47,14 @@
                 sys.eachNode(function(node, pt){
                     if (node.data.color=='red') {
                         var w = Math.max(60, 80+gfx.textWidth(node.name))
+                        var size = 22
                     } else {
                         var w = Math.max(40, 60+gfx.textWidth(node.name))
+                        var size =17
                     }
                     if (node.data.alpha===0) return
                     gfx.oval(pt.x-w/2, pt.y-w/2, w, w, {fill:node.data.color, alpha:node.data.alpha})
-                    gfx.text(node.name, pt.x, pt.y+7, {color:"white", align:"center", font:"Asap", size:17})
-                    gfx.text(node.name, pt.x, pt.y+7, {color:"white", align:"center", font:"Asap", size:17})
+                    gfx.text(node.name, pt.x, pt.y+7, {color:"white", align:"center", font:"Asap", size:size})
                 })
                 // that._drawVignette()
             },
@@ -290,13 +168,15 @@
                         _mouseP = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
                         nearest = dragged = sys.nearest(_mouseP);
                         
-                        $('#rFormReId').val(selected.node.data.data['relation']['id'])
-                        $('#rFormReType').val(selected.node.data.data['type']['id'])
-                        $('#rFormReDetailId').val(selected.node.data.data['detail']['id'])
-                        $('#rFormReDetailText').val(selected.node.data.data['detail']['text'])
-                        $('#rFormWToId').val(selected.node.data.data['word_to']['id'])
-                        $('#rFormWToWord').val(selected.node.data.data['word_to']['word'])
-                        $('#rFormWToLanguage').val(selected.node.data.data['word_to']['language'])
+                        if(selected.node.data.data){
+                            $('#rFormReId').val(selected.node.data.data['relation']['id'])
+                            $('#rFormReType').val(selected.node.data.data['type']['id'])
+                            $('#rFormReDetailId').val(selected.node.data.data['detail']['id'])
+                            $('#rFormReDetailText').val(selected.node.data.data['detail']['text'])
+                            $('#rFormWToId').val(selected.node.data.data['word_to']['id'])
+                            $('#rFormWToWord').val(selected.node.data.data['word_to']['word'])
+                            $('#rFormWToLanguage').val(selected.node.data.data['word_to']['language'])
+                        }
                         
                         if (dragged && dragged.node !== null) dragged.node.fixed = true
 
@@ -470,108 +350,27 @@
         return that
     }
 
-    // $(document).ready(function(){
-    //     var sys = arbor.ParticleSystem(1000, 600, 0.5) // create the system with sensible repulsion/stiffness/friction
-    //     sys.parameters({gravity:true}) // use center-gravity to make the graph settle nicely (ymmv)
-    //     sys.renderer = Renderer("#nerve-map") // our newly created renderer will have its .init() method called shortly by sys...
-        
-    //     // add some nodes to the graph and watch it go...
-    //     sys.addEdge('a','b')
-    //     sys.addEdge('a','c')
-    //     sys.addEdge('a','d')
-    //     sys.addEdge('a','e')
-    //     sys.addEdge('d','e')
-    //     // sys.addNode('f', {alone:true, mass:.25})
-        
-    //     // or, equivalently:
-    //     //
-    //     // sys.graft({
-    //     //     nodes:{
-    //     //         f:{alone:true, mass:.25}
-    //     //     }, 
-    //     //     edges:{
-    //     //         a:{ b:{},
-    //     //                 c:{},
-    //     //                 d:{},
-    //     //                 e:{}
-    //     //         }
-    //     //     }
-    //     // })
-                
-    // })
-    
-    // $(document).ready(function(){
-    //     var CLR = {
-    //         word_to:"#b2b19d",
-    //         code:"orange",
-    //         doc:"#922E00",
-    //         demo:"#a7af00"
-    //     }
-    //     var theUI = {
-    //         nodes:{
-    //             "arbor.js":{color:"red", shape:"dot", alpha:1},
-    //             demos:{color:CLR.branch, shape:"dot", alpha:1},
-    //             halfviz:{color:CLR.demo, alpha:0, link:'/halfviz'},
-    //             atlas:{color:CLR.demo, alpha:0, link:'/atlas'},
-    //             echolalia:{color:CLR.demo, alpha:0, link:'/echolalia'},
-    //             docs:{color:CLR.branch, shape:"dot", alpha:1},
-    //             reference:{color:CLR.doc, alpha:0, link:'#reference'},
-    //             introduction:{color:CLR.doc, alpha:0, link:'#introduction'},
-    //             code:{color:CLR.branch, shape:"dot", alpha:1},
-    //             github:{color:CLR.code, alpha:0, link:'https://github.com/samizdatco/arbor'},
-    //             ".zip":{color:CLR.code, alpha:0, link:'/js/dist/arbor-v0.92.zip'},
-    //             ".tar.gz":{color:CLR.code, alpha:0, link:'/js/dist/arbor-v0.92.tar.gz'}
-    //         },
-    //         edges:{
-    //             "arbor.js":{
-    //                 demos:{length:.8},
-    //                 docs:{length:.8},
-    //                 code:{length:.8}
-    //             },
-    //             demos:{
-    //                 halfviz:{},
-    //                 atlas:{},
-    //                 echolalia:{}
-    //             },
-    //             docs:{
-    //                 reference:{},
-    //                 introduction:{}
-    //             },
-    //             code:{
-    //                 ".zip":{},
-    //                 ".tar.gz":{},
-    //                 "github":{}
-    //             }
-    //         }
-    //     }
-    //     var sys = arbor.ParticleSystem()
-    //     sys.parameters({stiffness:900, repulsion:2000, gravity:true, dt:0.015})
-    //     sys.renderer = Renderer("#nerve-map")
-    //     sys.graft(theUI)
-
-    //     var nav = Nav("#nav")
-    //     $(sys.renderer).bind('navigate', nav.navigate)
-    //     $(nav).bind('mode', sys.renderer.switchMode)
-    //     nav.init()
-    // })
-
     $(document).ready(function(){
         var CLR = {
-            synonym:"#2572EB",         // color 1 blue
-            antonym:"#9E1716",         // color 2 brown
+            synonym:"#B30B02",         // color 1 scarlet
+            antonym:"#2572EB",         // color 2 blue
             verb_obj:"#128425",        // color 3 green
             obj_verb:"#128425",        // color 3 green
             subj_mod:"#128425",        // color 3 green
             mod_subj:"#128425",        // color 3 green
-            diff:"#2572EB",            // color 1 blue
-            association:"#008E8E",     // color 4 cyan
-            translation:"#008E8E",     // color 4 cyan
-            sense_contain:"#7200AC",   // color 6 purple
-            sense_belong:"#7200AC",    // color 6 purple
-            literal_contain:"#DE4AAD", // color 5 pink
-            literal_belong:"#DE4AAD",  // color 5 pink
-            explain_by:"#008E8E",      // color 4 cyan
-            explain:"#008E8E",         // color 4 cyan
+            diff:"#9E1716",            // color 1 scarlet
+            association:"#23BD00",     // color 3 bright green
+            translation:"#9E4802",     // color 7 brown
+            sematic_contain:"#008E8E", // color 5 cyan
+            sematic_belong:"#008E8E",  // color 5 cyan
+            literal_contain:"#7200AC", // color 6 purple
+            literal_belong:"#7200AC",  // color 6 purple
+            explain_by:"#FF7512",      // color 4 orange
+            explain:"#FF7512",         // color 4 orange
+            cognate:"#7200AC",         // color 6 purple
+            subj_verb:"#128425",       // color 3 green
+            verb_subj:"#128425",       // color 3 green
+            collocation:"#AC0050",     // color 8 pink purple
         }
         var theUI = {
             nodes:{
@@ -579,7 +378,7 @@
                 <?php foreach($data['relations'] as $relation): ?>
                 "<?= $relation['word_to']['word'] ?>":{
                     color:CLR.<?= $relation['type']['type'] ?>,
-                    link:'/nerve/?word=<?php echo $relation['word_to']['word'] ?>',
+                    link:'/nerve/?word=<?php echo addslashes($relation['word_to']['word']) ?>',
                     data:<?= json_encode($relation) ?>,
                     shape:"dot",
                     alpha:1
@@ -595,7 +394,7 @@
             }
         }
         var sys = arbor.ParticleSystem()
-        sys.parameters({stiffness:3000, repulsion:300, gravity:true, dt:0.015})
+        sys.parameters({stiffness:2000, repulsion:300, gravity:true, dt:0.015})
         sys.renderer = Renderer("#nerve-map")
         sys.graft(theUI)
 

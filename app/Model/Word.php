@@ -17,6 +17,8 @@ class Word extends AppModel {
     }
     
     public function queryForView($word, $language = NULL) {
+        
+        // fields
         $fields = array(
             'Word.id',
             'Word.language',
@@ -42,6 +44,8 @@ class Word extends AppModel {
             'Detail.id',
             'Detail.text',
         );
+        
+        // joins
         $joins = array(
             array(
                 'alias'      => 'Senses',
@@ -98,6 +102,8 @@ class Word extends AppModel {
                 ),
             ),
         );
+        
+        // conditions
         $conditions = array(
             'Word.deleted'  => AppModel::ENTRY_NOT_DELETED,
         );
@@ -125,6 +131,13 @@ class Word extends AppModel {
             )");
         }
         $conditions = array_merge($conditions, $wordCondition);
+        
+        // order
+        // $order = array(
+            // 'Senses.pos ASC',
+            // 'Senses.order_num ASC',
+        // );
+        
         return array(
             'fields'     => $fields,
             'joins'      => $joins,
@@ -136,16 +149,20 @@ class Word extends AppModel {
         $formatResult = array();
         if (!empty($queryResult)) {
             $formatResult['word']      = $queryResult[0]['Word'];
-            $formatResult['senses']    = $queryResult[0]['Senses'];
+            $formatResult['senses']    = array();
             $formatResult['relations'] = array();
             foreach ($queryResult as $index => $record) {
-                $formatResult['relations'][] = array(
-                    'relation'  => $record['Relation'],
-                    'type'      => $record['Type'],
-                    'detail'    => $record['Detail'],
-                    'word_to'   => $record['WordTo'],
-                    'senses_to' => $record['SensesTo'],
-                );
+                // array_push($formatResult['senses'], $record['Senses']);
+                $formatResult['senses'][$record['Senses']['id']] = $record['Senses'];
+                if (!empty($record['Relation']['id'])) {
+                    $formatResult['relations'][] = array(
+                        'relation'  => $record['Relation'],
+                        'type'      => $record['Type'],
+                        'detail'    => $record['Detail'],
+                        'word_to'   => $record['WordTo'],
+                        'senses_to' => $record['SensesTo'],
+                    );
+                }
             }
         }
         return $formatResult;
