@@ -21,7 +21,7 @@ class WordSense extends AppModel {
             'order' => $order,
         ));
         
-        if (empty($senseExist)) {
+        if (!empty($senseExist)) {
         // First sense of this 'part of speech'
             $senseData['order_num'] = intval($senseExist['WordSense']['order_num']) + 1;
         } else {

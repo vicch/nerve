@@ -1,5 +1,5 @@
-<!-- <pre style="font-size:12px;margin-left:10px;"><?php echo var_export($data) ?></pre> -->
-<canvas id="nerve-map" width="1045" height="950" style="opacity:1;"></canvas>
+<pre style="font-size:12px;margin-left:10px;"><?php // echo var_export($data) ?></pre>
+<canvas id="nerve-map" width="900" height="800" style="opacity:1;"></canvas>
 <script>
 (function($){
 
@@ -7,6 +7,8 @@
         var dom = $(elt)
         var canvas = dom.get(0)
         var ctx = canvas.getContext("2d");
+        ctx.canvas.width  = window.innerWidth - 660;
+        ctx.canvas.height = window.innerHeight - 3;
         var gfx = arbor.Graphics(canvas)
         var sys = null
 
@@ -45,16 +47,20 @@
                     gfx.line(p1, p2, {stroke:edge.target.data.color, width:4, alpha:edge.target.data.alpha})
                 })
                 sys.eachNode(function(node, pt){
+                    
+                    // node.name split by '_' for [language]_[word] format
+                    nodeWord = node.name.split('_');
+                    
                     if (node.data.color=='red') {
-                        var w = Math.max(60, 80+gfx.textWidth(node.name))
-                        var size = 22
+                        var w = Math.max(40, 60+gfx.textWidth(nodeWord[1]))
+                        var size = 20
                     } else {
-                        var w = Math.max(40, 60+gfx.textWidth(node.name))
-                        var size =17
+                        var w = Math.max(20, 40+gfx.textWidth(nodeWord[1]))
+                        var size = 16
                     }
                     if (node.data.alpha===0) return
                     gfx.oval(pt.x-w/2, pt.y-w/2, w, w, {fill:node.data.color, alpha:node.data.alpha})
-                    gfx.text(node.name, pt.x, pt.y+7, {color:"white", align:"center", font:"Asap", size:size})
+                    gfx.text(nodeWord[1], pt.x, pt.y+10, {color:"white", align:"center", font:"Arial Unicode MS", size:size})
                 })
                 // that._drawVignette()
             },
@@ -374,11 +380,11 @@
         }
         var theUI = {
             nodes:{
-                "<?= $data['word']['word'] ?>":{color:"red", shape:"dot", alpha:1},
+                "<?= $data['word']['language'] ?>_<?= $data['word']['word'] ?>":{color:"red", shape:"dot", alpha:1},
                 <?php foreach($data['relations'] as $relation): ?>
-                "<?= $relation['word_to']['word'] ?>":{
+                "<?= $relation['word_to']['language'] ?>_<?= $relation['word_to']['word'] ?>":{
                     color:CLR.<?= $relation['type']['type'] ?>,
-                    link:'/nerve/?word=<?php echo addslashes($relation['word_to']['word']) ?>',
+                    link:'/nerve/?word=<?= addslashes($relation['word_to']['word']) ?>&language=<?= addslashes($relation['word_to']['language']) ?>',
                     data:<?= json_encode($relation) ?>,
                     shape:"dot",
                     alpha:1
@@ -386,9 +392,9 @@
                 <?php endforeach; ?>
             },
             edges:{
-                "<?= $data['word']['word'] ?>":{
+                "<?= $data['word']['language'] ?>_<?= $data['word']['word'] ?>":{
                     <?php foreach($data['relations'] as $relation): ?>
-                    "<?= $relation['word_to']['word'] ?>":{length:.8},
+                    "<?= $relation['word_to']['language'] ?>_<?= $relation['word_to']['word'] ?>":{length:.8},
                     <?php endforeach; ?>
                 },
             }

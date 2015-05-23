@@ -16,7 +16,7 @@ class Word extends AppModel {
         return $this->__selectLangs;
     }
     
-    public function queryForView($word, $language = NULL) {
+    public function queryForView($word, $language) {
         
         // fields
         $fields = array(
@@ -109,6 +109,9 @@ class Word extends AppModel {
         );
         if (!empty($word)) {
             $wordCondition = array('Word.word' => $word);
+            if (!empty($language)) {
+                $wordCondition['Word.language'] = $language; 
+            }
         } else {
             // If no queried word,
             // display word with no less than INIT_MIN_RE relations,

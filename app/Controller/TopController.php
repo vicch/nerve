@@ -16,11 +16,9 @@ class TopController extends AppController {
     
     public function index() {
         
-        $word = '';
-        if (isset($this->request->query['word'])) {
-            $word = $this->request->query['word'];
-        }
-        $query = $this->Word->queryForView($word);
+        $word = isset($this->request->query['word']) ? $this->request->query['word'] : '';
+        $language = isset($this->request->query['language']) ? $this->request->query['language'] : '';
+        $query = $this->Word->queryForView($word, $language);
         $queryResult = $this->Word->find('all', $query);
         $queryData = $this->Word->formatForView($queryResult);
         
@@ -70,7 +68,8 @@ class TopController extends AppController {
         }
         
         if (!empty($postData[self::RIGHT_FORM_NAME]['wFromWord'])) {
-            $this->redirect('index?init=0&word=' . $postData[self::RIGHT_FORM_NAME]['wFromWord']);
+            $this->redirect('index?init=0&word=' . $postData[self::RIGHT_FORM_NAME]['wFromWord'] .
+                '&language=' . $postData[self::RIGHT_FORM_NAME]['wFromLanguage']);
         } else {
             $this->redirect('index');
         }

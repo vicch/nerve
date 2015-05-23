@@ -7,6 +7,8 @@ html, body {
 	color: #333333;
 	font-family: 'Asap', Helvetica, sans-serif;
 	height: 100%;
+	margin: 0;
+	width: 100%;
 }
 
 body {
@@ -27,26 +29,26 @@ body {
 
 #content-inner {
 	height: 100%;
-	margin: 0 480px 0 380px;
+	margin: 0 380px 0 280px;
 }
 
 .sidebar {
 	background-color: #FAFAFA;
-	box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.55) inset;
-	height: 800px;
+	box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.55);
+	height: auto;
 	padding: 25px;
 	position: absolute;
 }
 
 #leftbar {
-	left: 100px;
-	top: 50px;
+	left: 0px;
+	top: 0px;
 	width: 230px;
 }
 
 #rightbar {
-	right: 100px;
-	top: 50px;
+	right: 0px;
+	top: 0px;
 	width: 330px;
 }
 
@@ -60,7 +62,7 @@ body {
 }
 
 #relationbox {
-	height: 200px;
+	height: 120px;
 }
 
 #rightbar hr {
@@ -114,7 +116,7 @@ body {
 	padding-top: 3px;
 	position: relative;
 	text-indent: 1px;
-	top: -1px;
+	top: 0px;
 }
 
 .word-field select option {
@@ -137,6 +139,8 @@ div.submit input,
 div.submit button {
     height: 29px;
     margin-left: -1px;
+    position: relative;
+    top: -1px;
     width: 27px;
 }
 
@@ -162,7 +166,7 @@ div.submit button {
 }
 
 .detail-field textarea {
-	height: 140px;
+	height: 60px;
 	padding-left: 6px;
 	resize: none;
 	text-indent: 0;
